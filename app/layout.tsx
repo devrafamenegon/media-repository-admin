@@ -17,6 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -24,5 +25,6 @@ export default function RootLayout({
           </ThemeProvider>
         </body>
       </html>
+    </ClerkProvider>
   );
 }
