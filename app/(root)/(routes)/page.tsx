@@ -1,11 +1,9 @@
 "use client"
 
-import Navbar from "@/components/navbar"
-
 export default function MainPage() {
   return (
     <>
-      <Navbar />
+      <div>Overview</div>
     </>
   )
 }
