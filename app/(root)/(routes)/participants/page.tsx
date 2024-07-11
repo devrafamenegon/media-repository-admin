@@ -4,11 +4,7 @@ import { format } from "date-fns";
 import { SizeClient } from "./components/client";
 import { ParticipantColumn } from "./components/columns";
 
-const ParticipantsPage = async ({
-  params
-}: {
-  params: { storeId: string }
-}) => {
+const ParticipantsPage = async () => {
   const participants = await prismadb.participant.findMany({
     orderBy: {
       createdAt: 'desc'
