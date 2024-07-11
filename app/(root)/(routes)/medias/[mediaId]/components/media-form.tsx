@@ -193,6 +193,7 @@ export const MediaForm: React.FC<MediaFormProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Media</FormLabel>
+                  <FormDescription>Tamanho máximo de 100 MB</FormDescription>
                   <FormControl> 
                     <VideoUpload
                       url={field.value}
