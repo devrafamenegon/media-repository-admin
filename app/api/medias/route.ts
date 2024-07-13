@@ -47,7 +47,11 @@ export async function GET(
   req: Request,
 ) {
   try {
-    const medias = await prismadb.media.findMany({})
+    const medias = await prismadb.media.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      } 
+    })
 
     return NextResponse.json(medias);
   } catch (error) {
