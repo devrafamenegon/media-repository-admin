@@ -19,7 +19,7 @@ export async function POST(
   try {
     const { userId } = auth();
     const body = await req.json();
-    const { label, url, participantId } = body;
+    const { label, url, participantId, isNsfw } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 401 })
@@ -33,6 +33,10 @@ export async function POST(
       return new NextResponse("Url is required", { status: 400 })
     }
 
+    if (!isNsfw) {
+      return new NextResponse("Is Nsfw is required", { status: 400 })
+    }
+
     if (!participantId) {
       return new NextResponse("Participant ID is required", { status: 400 })
     }
@@ -42,7 +46,8 @@ export async function POST(
         label,
         url,
         participantId,
-        userId
+        userId,
+        isNsfw
       }
     })
 
@@ -57,7 +62,14 @@ export async function GET(
   req: Request,
 ) {
   try {
+    const { searchParams } = new URL(req.url);
+
+    const participantId = searchParams.get("participantId") || undefined;
+
     const medias = await prismadb.media.findMany({
+      where: {
+        participantId
+      },
       orderBy: {
         createdAt: 'desc'
       } 

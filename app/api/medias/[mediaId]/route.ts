@@ -32,7 +32,7 @@ export async function PATCH (
     const { userId } = auth();
     const body = await req.json();
 
-    const { label, url, participantId } = body;
+    const { label, url, participantId, isNsfw } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 401 })
@@ -49,6 +49,10 @@ export async function PATCH (
     if (!params.mediaId) {
       return new NextResponse("Media ID is required", { status: 400 })
     }
+    
+    if (!isNsfw) {
+      return new NextResponse("Is Nsfw is required", { status: 400 })
+    }
 
     const media = await prismadb.media.updateMany({
       where: {
@@ -58,7 +62,8 @@ export async function PATCH (
         label,
         url,
         participantId,
-        userId
+        userId,
+        isNsfw
       }
     })
 
