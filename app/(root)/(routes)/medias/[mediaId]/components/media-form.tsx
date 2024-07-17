@@ -32,11 +32,13 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const formSchema = z.object({
   label: z.string().min(1),
   url: z.string().url(),
   participantId: z.string().min(1),
+  isNsfw: z.boolean().default(true).optional()
 })
 
 type FormValues = z.infer<typeof formSchema>;
@@ -62,6 +64,7 @@ export const MediaForm: React.FC<MediaFormProps> = ({
       label: '',
       url: '',
       participantId: '',
+      isNsfw: false 
     }
   });
 
@@ -186,6 +189,31 @@ export const MediaForm: React.FC<MediaFormProps> = ({
                 )}
               />
             </div>
+
+            <div className="grid grid-cols-3 gap-8">
+              <FormField 
+                  control={form.control}
+                  name="isNsfw"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 ">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>
+                          NSFW
+                        </FormLabel>
+                        <FormDescription>
+                          This media will not appear in home page.
+                        </FormDescription>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
 
             <FormField 
               control={form.control}

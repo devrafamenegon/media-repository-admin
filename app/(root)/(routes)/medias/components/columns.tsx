@@ -8,7 +8,8 @@ export type MediaColumn = {
   id: string,
   label: string,
   participant: string,
-  createdAt: string
+  createdAt: string,
+  isNsfw: boolean
 }
 
 export const columns: ColumnDef<MediaColumn>[] = [
@@ -23,6 +24,10 @@ export const columns: ColumnDef<MediaColumn>[] = [
   {
     accessorKey: "createdAt",
     header: "Date",
+  },
+  {
+    accessorKey: "isNsfw",
+    header: "IsNfsw",
   },
   {
     id: "actions",

@@ -18,6 +18,7 @@ const MediasPage = async () => {
     id: item.id,
     label: item.label,
     participant: item.participant.name,
+    isNsfw: item.isNsfw,
     createdAt: format(item.createdAt, "MMMM do, yyyy")
   }));
 
