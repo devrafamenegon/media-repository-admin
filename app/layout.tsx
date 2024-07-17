@@ -8,7 +8,7 @@ import { ToastProvider } from "@/providers/toast-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Media Repository Admin",
+  title: "ADM Acervo",
   description: "Media Repository Admin",
 };
 
