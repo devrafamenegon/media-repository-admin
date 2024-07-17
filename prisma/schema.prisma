@@ -23,6 +23,7 @@ model Media {
   participant   Participant @relation(fields: [participantId], references: [id])
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+  isNsfw        Boolean     @default(false)
 
   @@index([participantId])
 }
