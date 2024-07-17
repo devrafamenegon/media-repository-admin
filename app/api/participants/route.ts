@@ -36,7 +36,11 @@ export async function GET(
   req: Request,
 ) {
   try {
-    const participants = await prismadb.participant.findMany({})
+    const participants = await prismadb.participant.findMany({
+      orderBy: {
+        name: 'asc'
+      } 
+    })
 
     return NextResponse.json(participants);
   } catch (error) {

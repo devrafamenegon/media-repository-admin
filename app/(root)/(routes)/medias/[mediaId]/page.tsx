@@ -13,7 +13,11 @@ const MediaPage = async ({
     }
   });
 
-  const participants = await prismadb.participant.findMany();
+  const participants = await prismadb.participant.findMany({
+    orderBy: {
+      name: 'asc'
+    }
+  });
 
   return (
     <div className="flex-col">
