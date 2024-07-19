@@ -2,6 +2,16 @@ import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization"
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders })
+}
+
 export async function GET (
   req: Request,
   { params }: { params: { participantId: string }}
@@ -17,7 +27,9 @@ export async function GET (
       },
     })
 
-    return NextResponse.json(participant);
+    return NextResponse.json(participant, {
+      headers: corsHeaders
+    });
   } catch (error) {
     console.log('[PARTICIPANT_GET', error);
     return new NextResponse("Internal error", { status: 500 })
