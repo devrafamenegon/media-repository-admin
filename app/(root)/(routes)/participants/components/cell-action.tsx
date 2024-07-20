@@ -32,9 +32,9 @@ export const CellAction: React.FC<CellActionProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/participant/${data.id}`);
+      await axios.delete(`/api/participants/${data.id}`);
       router.refresh();
-      router.push(`/participant`);
+      router.push(`/participants`);
       toast.success("Participant deleted.")
     } catch(error) {
       toast.error("Make sure you removed all medias using this participant first.");
@@ -67,7 +67,7 @@ export const CellAction: React.FC<CellActionProps> = ({
             <Copy className="mr-2 h-4 w-4" />
             Copy Id
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push(`/participant/${data.id}`)}>
+          <DropdownMenuItem onClick={() => router.push(`/participants/${data.id}`)}>
             <Edit className="mr-2 h-4 w-4" />
             Update
           </DropdownMenuItem>
