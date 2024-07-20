@@ -9,7 +9,7 @@ export async function POST(
   try {
     const { userId } = auth();
     const body = await req.json();
-    const { name } = body;
+    const { name, txtColor, bgColor } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 401 })
@@ -19,9 +19,19 @@ export async function POST(
       return new NextResponse("Name is required", { status: 400 })
     }
 
+    if (!txtColor) {
+      return new NextResponse("Text color is required", { status: 400 })
+    }
+
+    if (!bgColor) {
+      return new NextResponse("Background color is required", { status: 400 })
+    }
+
     const participant = await prismadb.participant.create({
       data: {
         name,
+        txtColor,
+        bgColor
       }
     })
 

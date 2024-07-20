@@ -2,15 +2,7 @@ import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization"
-};
 
-export async function OPTIONS() {
-  return NextResponse.json({}, { headers: corsHeaders })
-}
 
 export async function GET (
   req: Request,
@@ -27,9 +19,7 @@ export async function GET (
       },
     })
 
-    return NextResponse.json(participant, {
-      headers: corsHeaders
-    });
+    return NextResponse.json(participant);
   } catch (error) {
     console.log('[PARTICIPANT_GET', error);
     return new NextResponse("Internal error", { status: 500 })
@@ -44,7 +34,7 @@ export async function PATCH (
     const { userId } = auth();
     const body = await req.json();
 
-    const { name } = body;
+    const { name, txtColor, bgColor } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 401 })
@@ -52,6 +42,14 @@ export async function PATCH (
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 })
+    }
+
+    if (!txtColor) {
+      return new NextResponse("Text color is required", { status: 400 })
+    }
+
+    if (!bgColor) {
+      return new NextResponse("Background color is required", { status: 400 })
     }
 
     if (!params.participantId) {
@@ -64,6 +62,8 @@ export async function PATCH (
       },
       data: {
         name,
+        txtColor,
+        bgColor
       }
     })
 

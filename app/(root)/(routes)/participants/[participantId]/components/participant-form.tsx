@@ -26,6 +26,8 @@ import { AlertModal } from "@/components/modals/alert-modal";
 
 const formSchema = z.object({
   name: z.string().min(1),
+  txtColor: z.string().min(1),
+  bgColor: z.string().min(1)
 })
 
 type FormValues = z.infer<typeof formSchema>;
@@ -46,7 +48,9 @@ export const ParticipantForm: React.FC<ParticipantFormProps> = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
-      name: ''
+      name: '',
+      txtColor: '',
+      bgColor: ''
     }
   });
 
@@ -129,6 +133,44 @@ export const ParticipantForm: React.FC<ParticipantFormProps> = ({
                     <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input disabled={loading} placeholder="Participant name" {...field}/>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-3 gap-8">
+              <FormField 
+                control={form.control}
+                name="txtColor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Text Color</FormLabel>
+                    <FormControl>
+                      <div className="flex items-center gap-x-4">
+                        <Input disabled={loading} placeholder="#121212" {...field}/>
+                        <div 
+                          className="border p-4 rounded-full" style={{ backgroundColor: field.value }}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField 
+                control={form.control}
+                name="bgColor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Background Color</FormLabel>
+                    <FormControl>
+                      <div className="flex items-center gap-x-4">
+                        <Input disabled={loading} placeholder="#ffffff" {...field}/>
+                        <div 
+                          className="border p-4 rounded-full" style={{ backgroundColor: field.value }}
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

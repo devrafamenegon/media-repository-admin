@@ -14,7 +14,7 @@ interface ParticipantClientProps {
   data: ParticipantColumn[]
 }
 
-export const SizeClient: React.FC<ParticipantClientProps> = ({
+export const ParticipantClient: React.FC<ParticipantClientProps> = ({
   data
 }) => {
   const router = useRouter();
