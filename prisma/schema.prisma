@@ -16,6 +16,7 @@ datasource db {
 
 model Media {
   id            String      @id @default(uuid())
+  numericId     Int         @unique @default(autoincrement())
   label         String
   userId        String
   url           String
