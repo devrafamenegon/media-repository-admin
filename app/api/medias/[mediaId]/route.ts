@@ -49,10 +49,6 @@ export async function PATCH (
     if (!params.mediaId) {
       return new NextResponse("Media ID is required", { status: 400 })
     }
-    
-    if (!isNsfw) {
-      return new NextResponse("Is Nsfw is required", { status: 400 })
-    }
 
     const media = await prismadb.media.updateMany({
       where: {

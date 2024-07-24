@@ -23,10 +23,6 @@ export async function POST(
       return new NextResponse("Url is required", { status: 400 })
     }
 
-    if (!isNsfw) {
-      return new NextResponse("Is Nsfw is required", { status: 400 })
-    }
-
     if (!participantId) {
       return new NextResponse("Participant ID is required", { status: 400 })
     }
@@ -37,9 +33,11 @@ export async function POST(
         url,
         participantId,
         userId,
-        isNsfw
+        isNsfw,
       }
     })
+
+    console.log(media)
 
     return NextResponse.json(media);
   } catch (error) {
