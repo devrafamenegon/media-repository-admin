@@ -56,11 +56,12 @@ export async function GET(
 
     const medias = await prismadb.media.findMany({
       where: {
-        participantId
+        participantId,
+        isNsfw: false
       },
       orderBy: {
         createdAt: 'desc'
-      } 
+      }
     })
 
     return NextResponse.json(medias);
