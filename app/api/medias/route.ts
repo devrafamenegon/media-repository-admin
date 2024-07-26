@@ -37,8 +37,6 @@ export async function POST(
       }
     })
 
-    console.log(media)
-
     return NextResponse.json(media);
   } catch (error) {
     console.log('[MEDIAS_POST]', error);
