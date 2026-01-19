@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs/server";
 
 import prismadb from "@/lib/prismadb";
+import { getRequestUserId } from "@/lib/request-auth";
 
 export async function OPTIONS() {
   return new NextResponse(null, { status: 204 });
@@ -12,7 +13,7 @@ export async function GET(
   { params }: { params: { mediaId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const userId = await getRequestUserId(req);
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 401 });
@@ -40,7 +41,7 @@ export async function POST(
   { params }: { params: { mediaId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const userId = await getRequestUserId(req);
     const body = await req.json();
     const { body: commentBody } = body ?? {};
 
