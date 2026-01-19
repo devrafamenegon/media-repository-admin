@@ -40,6 +40,11 @@ export function MainNav({
       href: `/medias`,
       label: 'Medias',
       active: pathname === `/medias`
+    },
+    {
+      href: `/reactions`,
+      label: 'Reactions',
+      active: pathname === `/reactions`
     }
   ];
   
