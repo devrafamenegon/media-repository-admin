@@ -25,6 +25,10 @@ model Media {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   isNsfw        Boolean     @default(false)
+  viewCount     Int         @default(0)
+
+  reactions     MediaReaction[]
+  comments      MediaComment[]
 
   @@index([participantId])
 }
@@ -37,4 +41,51 @@ model Participant {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Media     Media[]
+}
+
+model ReactionType {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  label     String
+  emoji     String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reactions MediaReaction[]
+
+  @@index([isActive, order])
+}
+
+model MediaReaction {
+  id             String       @id @default(uuid())
+  mediaId        String
+  media          Media        @relation(fields: [mediaId], references: [id])
+  userId         String
+  authorName     String?
+  reactionTypeId String
+  reactionType   ReactionType @relation(fields: [reactionTypeId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([mediaId, userId, reactionTypeId])
+  @@index([mediaId])
+  @@index([reactionTypeId])
+  @@index([userId])
+}
+
+model MediaComment {
+  id             String   @id @default(uuid())
+  mediaId        String
+  media          Media    @relation(fields: [mediaId], references: [id])
+  userId         String
+  authorName     String?
+  authorImageUrl String?
+  body           String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([mediaId, createdAt])
+  @@index([userId])
 }

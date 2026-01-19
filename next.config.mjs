@@ -7,7 +7,7 @@ const nextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Credentials",
-            value: process.env.ACCESS_CONTROL_ALLOW_CREDENTIALS || "false",
+            value: process.env.ACCESS_CONTROL_ALLOW_CREDENTIALS || "true",
           },
           {
             key: "Access-Control-Allow-Origin",
