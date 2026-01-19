@@ -103,7 +103,7 @@ export async function POST(
   try {
     const userId = await getRequestUserId(req);
     const body = await req.json();
-    const { reactionTypeId } = body ?? {};
+    const { reactionTypeId, authorName: authorNameRaw } = body ?? {};
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 401 });
@@ -137,17 +137,24 @@ export async function POST(
       select: { id: true },
     });
 
+    const providedAuthorName =
+      typeof authorNameRaw === "string" && authorNameRaw.trim() ? authorNameRaw.trim() : null;
+
     if (!existing) {
       let authorName: string | null = null;
-      try {
-        const user = await clerkClient.users.getUser(userId);
-        authorName =
-          user.fullName ||
-          user.username ||
-          user.primaryEmailAddress?.emailAddress ||
-          null;
-      } catch (e) {
-        console.log("[MEDIA_REACTIONS_POST][CLERK_LOOKUP_FAILED]", e);
+      // Preferir nome enviado pelo client (Clerk do client). Fallback para Clerk do admin.
+      authorName = providedAuthorName;
+      if (!authorName) {
+        try {
+          const user = await clerkClient.users.getUser(userId);
+          authorName =
+            user.fullName ||
+            user.username ||
+            user.primaryEmailAddress?.emailAddress ||
+            null;
+        } catch (e) {
+          console.log("[MEDIA_REACTIONS_POST][CLERK_LOOKUP_FAILED]", e);
+        }
       }
 
       await prismaAny.mediaReaction.create({
@@ -157,6 +164,16 @@ export async function POST(
           reactionTypeId: type.id,
           authorName,
         },
+      });
+    } else if (providedAuthorName) {
+      // Atualiza registros existentes (útil para migrar de "User" -> nome real).
+      await prismadb.mediaReaction.updateMany({
+        where: {
+          mediaId: params.mediaId,
+          userId,
+          reactionTypeId: type.id,
+        },
+        data: { authorName: providedAuthorName },
       });
     }
 

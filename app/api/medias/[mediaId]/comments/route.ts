@@ -43,7 +43,7 @@ export async function POST(
   try {
     const userId = await getRequestUserId(req);
     const body = await req.json();
-    const { body: commentBody } = body ?? {};
+    const { body: commentBody, authorName: authorNameRaw, authorImageUrl: authorImageUrlRaw } = body ?? {};
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 401 });
@@ -57,19 +57,26 @@ export async function POST(
       return new NextResponse("Comment body is required", { status: 400 });
     }
 
-    let authorName: string | null = null;
-    let authorImageUrl: string | null = null;
-    try {
-      const user = await clerkClient.users.getUser(userId);
-      authorName =
-        user.fullName ||
-        user.username ||
-        user.primaryEmailAddress?.emailAddress ||
-        null;
-      authorImageUrl = user.imageUrl || null;
-    } catch (e) {
-      // ignore lookup failures; still allow comment creation
-      console.log("[MEDIA_COMMENTS_POST][CLERK_LOOKUP_FAILED]", e);
+    // Preferir dados enviados pelo client (Clerk do client). Fallback para Clerk do admin.
+    let authorName: string | null =
+      typeof authorNameRaw === "string" && authorNameRaw.trim() ? authorNameRaw.trim() : null;
+    let authorImageUrl: string | null =
+      typeof authorImageUrlRaw === "string" && authorImageUrlRaw.trim() ? authorImageUrlRaw.trim() : null;
+
+    if (!authorName || !authorImageUrl) {
+      try {
+        const user = await clerkClient.users.getUser(userId);
+        authorName =
+          authorName ||
+          user.fullName ||
+          user.username ||
+          user.primaryEmailAddress?.emailAddress ||
+          null;
+        authorImageUrl = authorImageUrl || user.imageUrl || null;
+      } catch (e) {
+        // ignore lookup failures; still allow comment creation
+        console.log("[MEDIA_COMMENTS_POST][CLERK_LOOKUP_FAILED]", e);
+      }
     }
 
     const created = await prismadb.mediaComment.create({
