@@ -29,7 +29,8 @@ export async function GET(req: Request) {
     if (participantId) {
       whereParts.push(Prisma.sql`"participantId" = ${participantId}`);
     }
-    const whereSql = Prisma.join(whereParts, Prisma.sql` AND `);
+    // Prisma.join espera o separador como string (não Prisma.sql) nessa versão do client.
+    const whereSql = Prisma.join(whereParts, " AND ");
 
     // Shuffle determinístico por seed, estável durante a sessão no client.
     // md5(concat("id", seed)) gera uma ordem pseudo-aleatória, mas reprodutível.
